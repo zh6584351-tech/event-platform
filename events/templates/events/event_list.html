@@ -14,6 +14,27 @@
     </a>
 </div>
 
+<form method="GET" action="{% url 'event-list' %}" class="flex gap-2 mb-6 max-w-lg">
+    <input 
+        type="text" 
+        name="q" 
+        value="{{ query }}" 
+        placeholder="Пошук подій за назвою чи описом..." 
+        class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    >
+    <button 
+        type="submit" 
+        class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition"
+    >
+        Знайти
+    </button>
+    {% if query %}
+        <a href="{% url 'event-list' %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center">
+            Відмінити
+        </a>
+    {% endif %}
+</form>
+
 <!-- Сітка подій -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for event in events %}

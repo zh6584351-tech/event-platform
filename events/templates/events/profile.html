@@ -1,0 +1,39 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Особистий кабінет{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Особистий кабінет</h1>
+    <p class="text-gray-600 mt-1">Вітаємо, {{ request.user.username }}! Тут зібрані події, на які ви зареєстровані.</p>
+</div>
+
+<!-- Сітка подій, на які зареєстрований користувач -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for reg in registrations %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ reg.event.title }}</h2>
+                <p class="text-gray-600 text-sm mb-4">{{ reg.event.description|truncatechars:100 }}</p>
+                
+                <div class="space-y-1 text-xs text-gray-500 mb-4">
+                    <p><strong> Локація:</strong> {{ reg.event.location }}</p>
+                    <p><strong> Час:</strong> {{ reg.event.start_time }}</p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-4 flex items-center justify-between">
+                <span class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2.5 py-1 rounded-full">Учасник</span>
+                <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Детальніше &rarr;</a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-span-full bg-white rounded-xl border border-gray-100 p-10 text-center">
+            <p class="text-gray-500 mb-4">Ви ще не зареєстровані на жодну подію.</p>
+            <a href="/" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition">
+                Обрати подію в каталозі
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

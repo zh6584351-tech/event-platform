@@ -6,6 +6,7 @@ from django.views.generic import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -85,3 +86,28 @@ def register_to_event(request, pk):
         messages.error(request, error_msg)
         
     return redirect('event-detail', pk=event.pk)
+
+@login_required
+def profile_view(request):
+    # Отримуємо всі реєстрації поточного користувача
+    registrations = Registration.objects.filter(user=request.user).select_related('event')
+    
+    context = {
+        'registrations': registrations,
+    }
+    return render(request, 'events/profile.html', context)
+
+def event_list_view(request):
+    query = request.GET.get('q', '')
+    events = Event.objects.all()
+    
+    if query:
+        # Фільтруємо за назвою або описом (регістронезалежно через icontains)
+        events = events.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+        
+    return render(request, 'events/event_list.html', {
+        'events': events,
+        'query': query
+    })
